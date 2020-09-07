@@ -1,11 +1,12 @@
 import java.util.List;
 import java.util.ArrayList;
 
+
 PImage input;
 int width = 100;
 int height = 100;
 SearchState[][] searchState = new SearchState[width][height];
-List<Segment> allLines = new ArrayList<Segment>();
+Image image = new Image();
 
 void setup() {
   size(800, 800);
@@ -24,18 +25,18 @@ void setup() {
       }
     }
   }
-  println("Found " + allLines.size() + " lines.");
+  println("Found " + image.size() + " lines.");
 }
 
 void startLineFind(int x, int y) {
   if (searchState[x][y] == SearchState.BLIND) {
     Segment line = new Segment();
-    allLines.add(line);
+    image.add(line);
     recursiveLineFind(x, y, line);
   }
 }
 void recursiveLineFind(int x, int y, Segment line) {
-  line.addPoint(new Point(x, y));
+  line.add(new Point(x, y));
   searchState[x][y] = SearchState.VISITED;
   List<Point> possibleDirections = new ArrayList<Point>();
   for (int i = -1; i < 2; i++) {
@@ -70,21 +71,20 @@ void draw() {
   float sinus = sin(frameCount/200.0);
   float scale = (sinus+6);
   offset = offset - ((offset * sinus)/4);
-  for (Segment line : allLines) {
-    List<Point> points = line.getPoints();
-    if (points.size() > 1) {
+  for (Segment line : image) {
+    if (line.size() > 1) {
       // line
-      for (int i = 0; i < points.size() - 1; i++) {
-        Point a = points.get(i);
-        Point b = points.get(i+1);
+      for (int i = 0; i < line.size() - 1; i++) {
+        Point a = line.get(i);
+        Point b = line.get(i+1);
         float drawAX = (a.getX() * scale) + offset;
         float drawAY = (a.getY() * scale) + offset;
         float drawBX = (b.getX() * scale) + offset;
         float drawBY = (b.getY() * scale) + offset;
         line(drawAX, drawAY, drawBX, drawBY);
       }
-    } else if (points.size() == 1) {
-        Point a = points.get(0);
+    } else if (line.size() == 1) {
+        Point a = line.get(0);
         float px = (a.getX() * scale) + offset;
         float py = (a.getY() * scale) + offset;
         float s = scale/2;
