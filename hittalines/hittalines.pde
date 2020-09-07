@@ -26,6 +26,9 @@ void setup() {
     }
   }
   println("Found " + image.size() + " lines.");
+  SvgBuilder svgBuilder = new SvgBuilder();
+  String output = svgBuilder.convertToSvgString(image);
+  saveStrings("output.svg", new String[]{output});
 }
 
 void startLineFind(int x, int y) {
